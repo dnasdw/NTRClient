@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -14,13 +15,13 @@ namespace ntrclient
     {
 		public delegate void LogDelegate(string l);
 		public LogDelegate delAddLog;
-
+		private CommandHistory history;
 
 
         public CmdWindow()
         {
 			delAddLog = new LogDelegate(Addlog);
-
+			history = new CommandHistory();
             InitializeComponent();
         }
 
@@ -59,11 +60,23 @@ namespace ntrclient
 		}
 		private void txtCmd_KeyDown(object sender, KeyEventArgs e) {
 			if (e.KeyCode == Keys.Enter) {
-				string cmd =  txtCmd.Text  ;
+				string cmd =  txtCmd.Text;
+                Regex rx = new Regex(@".*\(.*\)");
+                if (!rx.IsMatch(cmd)) return;
 				txtCmd.Clear();
 				runCmd(cmd);
-
+                history.AddCommand(cmd);
 			}
+			else if (e.KeyCode == Keys.Up)
+            {
+                txtCmd.Clear();
+                txtCmd.Text = history.GetPrevCmd();
+            }
+            else if (e.KeyCode == Keys.Down)
+            {
+                txtCmd.Clear();
+                txtCmd.Text = history.GetNextCmd();
+            }
 		}
 
 		void updateProgress() {
@@ -83,7 +96,7 @@ namespace ntrclient
 		}
 
 		private void CmdWindow_Load(object sender, EventArgs e) {
-            Addlog("NTR debugger by cell9");
+            Addlog("NTR debugger by cell9, enler");
 			runCmd("import sys;sys.path.append('.\\python\\Lib')");
 			runCmd("for n in [n for n in dir(nc) if not n.startswith('_')]: globals()[n] = getattr(nc,n)    ");
 			Addlog("Commands available: ");

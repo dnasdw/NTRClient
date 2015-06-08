@@ -49,6 +49,26 @@ namespace ntrclient {
 			return length;
 		}
 
+        void printSingleFloat(byte[] databuf) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < 32; i++) {
+                float s = BitConverter.ToSingle(databuf, 4 * i);
+                sb.AppendFormat("s{0} = {1:f4} ", i, s);
+                if ((i & 3) == 3) sb.AppendLine();
+            }
+            log(sb.ToString());
+        }
+
+        void printDoubleFloat(byte[] databuf) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < 16; i++) {
+                double s = BitConverter.ToDouble(databuf, 8 * i);
+                sb.AppendFormat("d{0} = {1:f8} ", i, s);
+                if ((i & 1) == 1) sb.AppendLine();
+            }
+            log(sb.ToString());
+        }
+
 		void packetRecvThreadStart() {
 			byte[] buf = new byte[84];
 			UInt32[] args = new UInt32[16];
@@ -96,6 +116,15 @@ namespace ntrclient {
 						}
 						continue;
 					}
+                    if (cmd == 11 && dataLen != 0) {
+                        byte[] dataBuf = new byte[dataLen];
+                        readNetworkStream(stream, dataBuf, dataBuf.Length);
+                        if ((args[2] & ~0x100) == 0x61)
+                            printSingleFloat(dataBuf);
+                        else if ((args[2] & ~0x100) == 0x62)
+                            printDoubleFloat(dataBuf);
+                        continue;
+                    }
 					if (dataLen != 0) {
 						byte[] dataBuf = new byte[dataLen];
 						readNetworkStream(stream, dataBuf, dataBuf.Length);
@@ -112,13 +141,34 @@ namespace ntrclient {
 			disconnect(false);
 		}
 
-		string byteToHex(byte[] datBuf, int type) {
-			string r = "";
-			for (int i = 0; i < datBuf.Length; i++) {
-				r += datBuf[i].ToString("X2") + " ";
-			}
-			return r;
-		}
+        string byteToHex(byte[] datBuf, int type) {
+            string r = "           00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F\r\n";
+            uint address = 0;
+            int i = 0;
+            for (; i <= datBuf.Length; i++) {
+                if ((i & 0xF) == 0) {
+                    if (i != 0) {
+                        int j = 0;
+                        r += "\t";
+                        for (; j < 0x10; j++) {
+                            char c = (char)datBuf[i - 0x10 + j];
+                            if (c >= 0x20 && c <= 0x7F)
+                                r += c;
+                            else
+                                r += '.';
+                        }
+                        if (i == datBuf.Length) break;
+                        r += Environment.NewLine;
+                    }
+                    if (i == datBuf.Length) break;
+                    r += address.ToString("X8") + " : ";
+                    address += 0x10;
+                }
+                if (i == datBuf.Length) break;
+                r += datBuf[i].ToString("X2") + " ";
+            }
+            return r;
+        }
 
 		void handleReadMem(UInt32 seq, byte[] dataBuf) {
 			if (seq != lastReadMemSeq) {
