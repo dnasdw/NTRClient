@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ntrclient {
 	public class ScriptHelper {
-        public void bpadd(uint addr, string type = "code.once") {
+        public void bpadd(uint addr, string type = "arm") {
             if (type == "arm") {
                 Program.ntrClient.sendEmptyPacket(11, addr, 0, 0x101);
             }
