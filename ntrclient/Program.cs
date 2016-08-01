@@ -15,19 +15,21 @@ namespace ntrclient
 
         public static ScriptEngine pyEngine;
         public static NtrClient ntrClient;
-		public static ScriptHelper scriptHelper;
-		public static ScriptScope globalScope;
-		public static CmdWindow gCmdWindow;
-		public static SettingsManager sm;
+        public static ScriptHelper scriptHelper;
+        public static ScriptScope globalScope;
+        public static CmdWindow gCmdWindow;
+        public static SettingsManager sm;
 
-		public static void loadConfig() {
-			sm = SettingsManager.LoadFromXml("ntrconfig.xml");
-			sm.init();
-		}
+        public static void loadConfig()
+        {
+            sm = SettingsManager.LoadFromXml("ntrconfig.xml");
+            sm.init();
+        }
 
-		public static void saveConfig() {
-			SettingsManager.SaveToXml("ntrconfig.xml", sm);
-		}
+        public static void saveConfig()
+        {
+            SettingsManager.SaveToXml("ntrconfig.xml", sm);
+        }
 
         /// <summary>
         /// 应用程序的主入口点。
@@ -37,16 +39,16 @@ namespace ntrclient
         {
             pyEngine = Python.CreateEngine();
             ntrClient = new NtrClient();
-			scriptHelper = new ScriptHelper();
+            scriptHelper = new ScriptHelper();
 
-			globalScope = pyEngine.CreateScope();
-			globalScope.SetVariable("nc", scriptHelper);
-			
-			loadConfig();
+            globalScope = pyEngine.CreateScope();
+            globalScope.SetVariable("nc", scriptHelper);
+
+            loadConfig();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-			gCmdWindow = new CmdWindow();
+            gCmdWindow = new CmdWindow();
             Application.Run(gCmdWindow);
         }
     }

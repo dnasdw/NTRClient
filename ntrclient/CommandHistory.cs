@@ -11,38 +11,46 @@ namespace ntrclient
         private List<string> history;
         private int currentIndex;
 
-        public CommandHistory() {
+        public CommandHistory()
+        {
             history = new List<string>();
             currentIndex = 0;
         }
 
-        public void AddCommand(string cmd) {
+        public void AddCommand(string cmd)
+        {
             if (!(history.Count != 0 && history[history.Count - 1] == cmd))
                 history.Add(cmd);
             currentIndex = history.Count;
         }
 
-        public string GetPrevCmd() {
+        public string GetPrevCmd()
+        {
             string cmd = "";
-            try {
+            try
+            {
                 if (currentIndex > 0)
                     currentIndex--;
                 cmd = history[currentIndex];
             }
-            catch (System.ArgumentOutOfRangeException) {
+            catch (System.ArgumentOutOfRangeException)
+            {
 
             }
             return cmd;
         }
 
-        public string GetNextCmd() {
+        public string GetNextCmd()
+        {
             string cmd = "";
-            try {
+            try
+            {
                 if (currentIndex < history.Count)
                     currentIndex++;
                 cmd = history[currentIndex];
             }
-            catch (System.ArgumentOutOfRangeException) {
+            catch (System.ArgumentOutOfRangeException)
+            {
 
             }
             return cmd;

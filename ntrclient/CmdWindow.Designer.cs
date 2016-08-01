@@ -173,12 +173,12 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.TextBox txtLog;
         private System.Windows.Forms.TextBox txtCmd;
-		private System.Windows.Forms.Timer timer1;
-		private System.Windows.Forms.MenuStrip menuStrip1;
-		private System.Windows.Forms.ToolStripMenuItem 窗口ToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem 命令输入器ToolStripMenuItem;
-		private System.Windows.Forms.StatusStrip statusStrip1;
-		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem 窗口ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 命令输入器ToolStripMenuItem;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripMenuItem asmScratchPadToolStripMenuItem;
 
 
