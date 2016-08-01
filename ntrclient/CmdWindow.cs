@@ -24,6 +24,11 @@ namespace ntrclient
             InitializeComponent();
         }
 
+        public void SetFirstBreak(bool a_bFirstBreak)
+        {
+            m_bFirstBreak = a_bFirstBreak;
+        }
+
         public void Addlog(string l)
         {
             if (!l.Contains("\r\n"))
@@ -112,7 +117,7 @@ namespace ntrclient
 
         private void CmdWindow_Load(object sender, EventArgs e)
         {
-            Addlog("NTR debugger by cell9, enler");
+            Addlog("NTR debugger by cell9, enler, dnasdw");
             runCmd("import sys;sys.path.append('.\\python\\Lib')");
             runCmd("for n in [n for n in dir(nc) if not n.startswith('_')]: globals()[n] = getattr(nc,n)    ");
             Addlog("Commands available: ");
@@ -153,7 +158,30 @@ namespace ntrclient
 
                 }
             }
-
+            else
+            {
+                switch (e.KeyCode)
+                {
+                case Keys.F5:
+                    if (m_bFirstBreak)
+                    {
+                        runCmd("continueprocess()");
+                        m_bFirstBreak = false;
+                    }
+                    else
+                    {
+                        runCmd("resume()");
+                    }
+                    e.SuppressKeyPress = true;
+                    break;
+                case Keys.F11:
+                    runCmd("step()");
+                    e.SuppressKeyPress = true;
+                    break;
+                default:
+                    break;
+                }
+            }
         }
 
         private void toolStripStatusLabel1_Click(object sender, EventArgs e)
@@ -165,5 +193,7 @@ namespace ntrclient
         {
             (new AsmEditWindow()).Show();
         }
+
+        private bool m_bFirstBreak = true;
     }
 }

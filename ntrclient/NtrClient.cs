@@ -250,6 +250,7 @@ namespace ntrclient
             packetRecvThread = new Thread(new ThreadStart(packetRecvThreadStart));
             packetRecvThread.Start();
             log("Server connected.");
+            Program.gCmdWindow.SetFirstBreak(true);
         }
 
         public void disconnect(bool waitPacketThread = true)
