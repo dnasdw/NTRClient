@@ -5,7 +5,6 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -73,8 +72,6 @@ namespace ntrclient
             if (e.KeyCode == Keys.Enter)
             {
                 string cmd = txtCmd.Text;
-                Regex rx = new Regex(@".*\(.*\)");
-                if (!rx.IsMatch(cmd)) return;
                 txtCmd.Clear();
                 runCmd(cmd);
                 history.AddCommand(cmd);
