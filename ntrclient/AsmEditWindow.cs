@@ -9,34 +9,42 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ntrclient {
-    public partial class AsmEditWindow : Form {
+namespace ntrclient
+{
+    public partial class AsmEditWindow : Form
+    {
         string asPath = "bin/arm-none-eabi-as";
         string ocPath = "bin/arm-none-eabi-objcopy";
         string ldPath = "bin/arm-none-eabi-ld";
         byte[] compileResult = null;
 
-        public AsmEditWindow() {
+        public AsmEditWindow()
+        {
             InitializeComponent();
         }
 
-        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e) {
+        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
 
         }
 
-        private void label1_Click(object sender, EventArgs e) {
+        private void label1_Click(object sender, EventArgs e)
+        {
 
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e) {
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
 
         }
 
-        private void button1_Click(object sender, EventArgs e) {
+        private void button1_Click(object sender, EventArgs e)
+        {
             compileAsmCode();
         }
 
-        bool callToolchain(string asOpts, string ldOpts, string ocOpts, ref string result) {
+        bool callToolchain(string asOpts, string ldOpts, string ocOpts, ref string result)
+        {
             int ret;
             string output = null;
 
@@ -52,11 +60,12 @@ namespace ntrclient {
             ret = Utility.runCommandAndGetOutput(ocPath, ocOpts, ref output);
             result += ocPath + ocOpts + "\r\n" + output + "\r\n";
             if (ret != 0) return false;
-            
+
             return true;
         }
 
-        void compileAsmCode() {
+        void compileAsmCode()
+        {
             compileResult = null;
             string asmCode = txtAsmText.Text;
             string[] instructOpts = comboBox1.Text.Split(',');
@@ -70,8 +79,10 @@ namespace ntrclient {
 
             asOpts += "-o payload.o -mlittle-endian";
             asOpts += " -march=" + arch;
-            if (instructOpts.Length > 1) {
-                if (instructOpts[1] == "thumb") {
+            if (instructOpts.Length > 1)
+            {
+                if (instructOpts[1] == "thumb")
+                {
                     asOpts += " -mthumb";
                 }
             }
@@ -81,10 +92,12 @@ namespace ntrclient {
 
             string result = "";
             bool isSuccessed = callToolchain(asOpts, ldOpts, ocOpts, ref result);
-            if (!isSuccessed) {
+            if (!isSuccessed)
+            {
                 result += "compile failed...";
             }
-            else {
+            else
+            {
                 compileResult = File.ReadAllBytes("payload.bin");
                 result += "result: \r\n" + Utility.convertByteArrayToHexString(compileResult);
             }
